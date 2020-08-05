@@ -7,7 +7,7 @@ public class Customers {
 
 	public String cus_id;
 	public String cus_login;
-	public String cus_first_name;
+	public String cus_first_name;	
 	public String cus_last_name;
 	public String cus_telephone;
 	public String cus_email;

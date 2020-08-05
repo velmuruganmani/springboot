@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.vel.springdatajdbc.entities.Customers;
+import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.service.CustomersService;
 
 
@@ -26,9 +28,17 @@ public class CustomersController {
 	}
 
 	@GetMapping("/get/{loginId}")
-    public ResponseEntity<?> getProjectById(@PathVariable String loginId) throws Exception{
+    public ResponseEntity<?> getCustomersById(@PathVariable String loginId) throws Exception{
 		
         List<Customers> user = customersService.getCustomersById(loginId);
+        
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+	
+	@GetMapping("/get/search")
+    public ResponseEntity<?> getAllCustomers(@RequestBody GetAllCustomersRequest getAllCustomersRequest) throws Exception{
+		
+        List<Customers> user = customersService.getAllCustomers(getAllCustomersRequest);
         
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

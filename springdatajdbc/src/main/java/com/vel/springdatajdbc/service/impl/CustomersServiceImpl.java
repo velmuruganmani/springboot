@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.vel.springdatajdbc.entities.Customers;
+import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.repository.CustomersRepository;
 import com.vel.springdatajdbc.service.CustomersService;
 
@@ -18,6 +19,13 @@ public class CustomersServiceImpl implements CustomersService {
 	public List<Customers> getCustomersById(String loginId) {
 		// TODO Auto-generated method stub
 		List<Customers> user = customersRepository.getCustomersById(loginId);
+		return user;
+	}
+
+	@Override
+	public List<Customers> getAllCustomers(GetAllCustomersRequest request) {
+		// TODO Auto-generated method stub
+		List<Customers> user = customersRepository.getAllCustomers(request);
 		return user;
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.vel.springdatajdbc.entities.Access;
 import com.vel.springdatajdbc.entities.Applications;
 import com.vel.springdatajdbc.entities.Customers;
+import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.repository.CustomersRepository;
 
 
@@ -92,6 +93,82 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 				 	}   	  
 		      });
 		      return customers;
+	}
+
+	@Override
+	public List<Customers> getAllCustomers(GetAllCustomersRequest request) {
+		// TODO Auto-generated method stub
+		List<Customers> customersList = new ArrayList<Customers>();
+		String sql = "select \n" + 
+				"u.cus_id, u.cus_login, u.cus_first_name, u.cus_last_name,\n" + 
+				"p.access_id, p.access_name,\n" + 
+				"a.app_id, a.app_name\n" + 
+				"from \n" + 
+				"springdatajdbc.customers u, \n" + 
+				"springdatajdbc.customers_access up, \n" + 
+				"springdatajdbc.applications_config f,\n" + 
+				"springdatajdbc.applications a, \n" + 
+				"springdatajdbc.access p \n" + 
+				"where\n" + 
+				"up.cus_id = u.cus_id\n" + 
+				"and up.access_id=p.access_id\n" + 
+				"and up.appconfig_id=f.app_id\n" + 
+				"and up.app_id=f.app_config_id\n" + 
+				"and f.app_id=a.app_id\n" + 
+				"and u.cus_status=0\n";
+		
+		if(request.getCus_first_name()!=null || request.getCus_last_name()!=null || 
+				request.getCus_app_name()!=null || request.getCus_app_access()!=null) {
+			
+			sql = sql+"and ((u.cus_first_name like\n"
+					+"('"+(request.getCus_first_name()!=null?request.getCus_first_name().toLowerCase()+"%":"")+"')\n"
+					+ "or u.cus_last_name like\n"
+					+"('"+(request.getCus_last_name()!=null?request.getCus_last_name().toLowerCase()+"%":"")+"'))\n"
+					+ "or a.app_name='"+request.getCus_app_name()+"'\n"
+					+ "or p.access_name='"+request.getCus_app_access()+"')\n"
+					+ "order by u.cus_id";
+			
+		}
+		
+		 	jdbcTemplate.query(sql, new ResultSetExtractor<List<Customers>>(){
+
+			@Override
+			public List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException {
+				// TODO Auto-generated method stub
+				
+				Customers customer = new Customers();
+				Applications application = new Applications();
+				List<Applications> appsList = new ArrayList<Applications>();
+				int cus_id=0;
+				while(rs.next()){
+					if(rs.getInt("cus_id") != cus_id) {
+						if(cus_id != 0) {
+							customer.setApplicationsDetails(appsList);
+							customersList.add(customer);
+							appsList = new ArrayList<Applications>();
+						}
+						customer = new Customers();
+						customer.setCus_login(rs.getString("cus_login"));
+						customer.setCus_id(rs.getString("cus_id"));
+			 			customer.setCus_first_name(rs.getString("cus_first_name"));
+			 			customer.setCus_last_name(rs.getString("cus_last_name"));
+					}
+					application = new Applications();
+					application.setApp_id(rs.getString("app_id"));
+			 		application.setApp_name(rs.getString("app_name"));
+			 		appsList.add(application);
+			 		
+			 		cus_id = rs.getInt("cus_id");
+					
+				}
+				customer.setApplicationsDetails(appsList);				 		
+				customersList.add(customer);			 	
+	            return customersList;
+			}
+			 
+		 });
+		
+		return customersList;
 	}
 
 }
