@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import com.vel.springdatajdbc.entities.Access;
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
+import com.vel.springdatajdbc.entities.ApplicationAccess;
 import com.vel.springdatajdbc.entities.Applications;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
@@ -197,16 +198,33 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 			customer  = jdbcTemplate.queryForObject(sql,
 					new BeanPropertyRowMapper<Customers>(Customers.class));
 			
-			if(customer==null) {
-				
-				
-				
-			}else if(customer!=null) {
+			if(customer!=null) {
 				response.setErrorMessage("Customer Login ID is already exits");
 			}
 		
 		}catch (EmptyResultDataAccessException e) {
-			response.setErrorMessage(e.toString());
+			Applications application = new Applications();
+			List<Applications> applicationList = new ArrayList<Applications>();
+			List<ApplicationAccess> applicationAccessList = new ArrayList<ApplicationAccess>();
+			applicationAccessList = addCustomersRequest.getApplicationAccessDetails();
+			for (int i = 0; i < applicationAccessList.size(); i++) 
+             {
+				String cus_app_name = applicationAccessList.get(i).getApp_name();
+				String appsql = "select \n" + 
+						"* \n" + 
+						"from \n" + 
+						"springdatajdbc.applications a \n" + 
+						"where \n" + 
+						"a.app_name='"+cus_app_name+"'";
+				
+				application  = jdbcTemplate.queryForObject(appsql,
+							new BeanPropertyRowMapper<Applications>(Applications.class));
+				applicationList.add(application);				
+             }
+			customer.setApplicationsDetails(applicationList);
+			response.setCustomers(customer);
+			response.setSuccessMessage("Customer Login ID created successfully");
+			return response;
 		}
 		catch(Exception e) {
 			response.setErrorMessage(e.toString());
