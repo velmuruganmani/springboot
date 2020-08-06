@@ -8,14 +8,19 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import com.vel.springdatajdbc.entities.Access;
+import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Applications;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
+import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.repository.CustomersRepository;
 
 
@@ -31,11 +36,14 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 	}
 	
 	@Autowired 
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired 
 	JdbcTemplate jdbcTemplate;
 	
 	@Override
 	public List<Customers> getCustomersById(String loginId) {
-		// TODO Auto-generated method stub
+
 		String sql = "select \n" + 
 				"u.cus_id, u.cus_first_name, u.cus_last_name,\n" + 
 				"p.access_id, p.access_name,\n" + 
@@ -97,7 +105,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 
 	@Override
 	public List<Customers> getAllCustomers(GetAllCustomersRequest request) {
-		// TODO Auto-generated method stub
+
 		List<Customers> customersList = new ArrayList<Customers>();
 		String sql = "select \n" + 
 				"u.cus_id, u.cus_login, u.cus_first_name, u.cus_last_name,\n" + 
@@ -117,13 +125,13 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 				"and f.app_id=a.app_id\n" + 
 				"and u.cus_status=0\n";
 		
-		if(request.getCus_first_name()!=null || request.getCus_last_name()!=null || 
-				request.getCus_app_name()!=null || request.getCus_app_access()!=null) {
+		if((request.getCus_name()!=null || request.getCus_app_name()!=null || request.getCus_app_access()!=null)&
+				(!request.getCus_app_access().equalsIgnoreCase("all"))) {
 			
 			sql = sql+"and ((u.cus_first_name like\n"
-					+"('"+(request.getCus_first_name()!=null?request.getCus_first_name().toLowerCase()+"%":"")+"')\n"
+					+"('"+(request.getCus_name()!=null?request.getCus_name().toLowerCase()+"%":"")+"')\n"
 					+ "or u.cus_last_name like\n"
-					+"('"+(request.getCus_last_name()!=null?request.getCus_last_name().toLowerCase()+"%":"")+"'))\n"
+					+"('"+(request.getCus_name()!=null?request.getCus_name().toLowerCase()+"%":"")+"'))\n"
 					+ "or a.app_name='"+request.getCus_app_name()+"'\n"
 					+ "or p.access_name='"+request.getCus_app_access()+"')\n"
 					+ "order by u.cus_id";
@@ -169,6 +177,43 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		 });
 		
 		return customersList;
+	}
+
+	@Override
+	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) {
+
+		GetAllCustomersResponse response = new GetAllCustomersResponse();
+		Customers customer = new Customers();
+		
+		//Check for duplicate loginId
+		try {
+			String sql = "select \n" + 
+				"* \n" + 
+				"from \n" + 
+				"springdatajdbc.customers u \n" + 
+				"where \n" + 
+				"u.cus_login='"+addCustomersRequest.getCus_login()+"'";
+		
+			customer  = jdbcTemplate.queryForObject(sql,
+					new BeanPropertyRowMapper<Customers>(Customers.class));
+			
+			if(customer==null) {
+				
+				
+				
+			}else if(customer!=null) {
+				response.setErrorMessage("Customer Login ID is already exits");
+			}
+		
+		}catch (EmptyResultDataAccessException e) {
+			response.setErrorMessage(e.toString());
+		}
+		catch(Exception e) {
+			response.setErrorMessage(e.toString());
+		}
+		
+		response.setCustomers(customer);
+		return response;
 	}
 
 }
