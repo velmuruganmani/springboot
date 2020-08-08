@@ -1,27 +1,43 @@
 package com.vel.springdatajdbc.entities;
 
 import java.util.List;
+//import org.springframework.data.annotation.Id;
+//import org.springframework.data.relational.core.mapping.Column;
+//import org.springframework.data.relational.core.mapping.Table;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+//import com.fasterxml.jackson.annotation.JsonSetter;
 
-
+@JsonPropertyOrder({ "application_id", "application_name", "accessDetails"})
+//@Table("applications") 
 public class Applications {
 
-	public String app_id;
-	public String app_name;
+	//@Id
+	//@Column("app_id")
+	public String application_id;	
+	//@Column("app_name")
+	public String application_name;		
 	List<Access> accessDetails;
 	
+	@JsonGetter("app_id")
+	public String getApplication_id() {
+		return application_id;
+	}
+	//@JsonSetter("app_id")
+	public void setApplication_id(String application_id) {
+		this.application_id = application_id;
+	}
 	
-	public String getApp_id() {
-		return app_id;
+	@JsonGetter("app_name")
+	public String getApplication_name() {
+		return application_name;
 	}
-	public void setApp_id(String app_id) {
-		this.app_id = app_id;
+	//@JsonSetter("app_name")
+	public void setApplication_name(String application_name) {
+		this.application_name = application_name;
 	}
-	public String getApp_name() {
-		return app_name;
-	}
-	public void setApp_name(String app_name) {
-		this.app_name = app_name;
-	}
+	
+	@JsonGetter("access")
 	public List<Access> getAccessDetails() {
 		return accessDetails;
 	}
@@ -31,8 +47,8 @@ public class Applications {
 	
 	@Override
 	public String toString() {
-		return "Applications [app_id=" + app_id + ", app_name=" + app_name + ", accessDetails=" + accessDetails + "]";
-	}
-	
+		return "Applications [application_id=" + application_id + ", application_name=" + application_name
+				+ ", accessDetails=" + accessDetails + "]";
+	}	
 	
 }
