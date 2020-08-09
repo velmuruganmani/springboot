@@ -7,27 +7,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-//import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import com.vel.springdatajdbc.entities.Access;
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
-//import com.vel.springdatajdbc.entities.ApplicationAccess;
 import com.vel.springdatajdbc.entities.Applications;
 import com.vel.springdatajdbc.entities.ApplicationsConfig;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.repository.CustomersRepository;
+import com.vel.springdatajdbc.service.impl.ApplicationsConfigAccessRowMapper;
+import com.vel.springdatajdbc.service.impl.CustomerAccessRowMapper;
+import com.vel.springdatajdbc.service.impl.CustomerApplicationRowMapper;
+import com.vel.springdatajdbc.service.impl.CustomerResultSetExtractor;
 
 
 @Repository
@@ -192,6 +192,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		GetAllCustomersResponse response = new GetAllCustomersResponse();
 		int noOfCustomerRowsAffected = 0;
 		int noOfApplicationRowsAffected = 0;
+		customer = new Customers();
 			
 		//Check for duplicate loginId
 		try {
@@ -205,6 +206,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 			List <Customers> customerList = jdbcTemplate.query(sql, new CustomerResultSetExtractor());
 			
 			if(customerList.size()>0) {
+				customer = customerList.get(0);
 				response.setErrorMessage("Customer Login ID is already exits");
 			}else {	
 				String cussql = "select max(u.cus_id) \n" +
@@ -322,71 +324,5 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		response.setCustomers(customer);
 		return response;
 	}
-
-	
-
-	private static final class CustomerApplicationRowMapper implements RowMapper<Applications> {
-
-		@Override
-		public Applications mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Applications application = new Applications();	 
-			application.setApplication_id(rs.getString("app_id"));
-	 		application.setApplication_name(rs.getString("app_name")); 
-	        return application;
-		}
-		
-	}
-	
-	private static final class CustomerAccessRowMapper implements RowMapper<Access> {
-
-		@Override
-		public Access mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Access access = new Access();	 
-			access.setApp_access_id(rs.getString("access_id"));
-			access.setApp_access_name(rs.getString("access_name")); 
-	        return access;
-		}
-		
-	}
-	
-	private static final class ApplicationsConfigAccessRowMapper implements RowMapper<ApplicationsConfig> {
-
-		@Override
-		public ApplicationsConfig mapRow(ResultSet rs, int rowNum) throws SQLException {
-			ApplicationsConfig appconfig = new ApplicationsConfig();	 
-			appconfig.setApplication_config_id(rs.getString("app_config_id"));
-			appconfig.setApplication_config_name(rs.getString("app_config_name"));
-			appconfig.setApplication_id(rs.getString("app_id")); 
-	        return appconfig;
-		}
-		
-	}
-	
-	private static final class CustomerResultSetExtractor implements ResultSetExtractor<List<Customers>> {
-
-		@Override
-		public List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException {
-			List<Customers> customersList = new ArrayList<Customers>();
-			customer = new Customers();
-			while(rs.next()){			 
-			customer.setCustomer_login(rs.getString("cus_login"));
-			customer.setCustomer_id(rs.getString("cus_id"));
-			customer.setCustomer_first_name(rs.getString("cus_first_name"));
-			customer.setCustomer_last_name(rs.getString("cus_last_name"));
-			customer.setCustomer_email(rs.getString("cus_email"));
-			customer.setCustomer_fax(rs.getString("cus_fax"));
-			customer.setCustomer_iso_code(rs.getString("cus_iso_code"));
-			customer.setCustomer_language(rs.getString("cus_language"));
-			customer.setCustomer_serial_no(rs.getString("cus_serial_no"));
-			customer.setCustomer_status(rs.getString("cus_status"));
-			customer.setCustomer_telephone(rs.getString("cus_telephone"));
-			customersList.add(customer);
-			}
-			return customersList;
-		}
-		
-	}
-	
-	
 
 }

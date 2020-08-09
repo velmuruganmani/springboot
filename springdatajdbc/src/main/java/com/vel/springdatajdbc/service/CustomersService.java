@@ -1,7 +1,6 @@
 package com.vel.springdatajdbc.service;
 
 import java.util.List;
-
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
