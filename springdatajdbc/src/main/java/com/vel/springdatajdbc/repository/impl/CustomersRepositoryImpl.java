@@ -24,10 +24,6 @@ import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.repository.CustomersRepository;
-import com.vel.springdatajdbc.service.impl.ApplicationsConfigAccessRowMapper;
-import com.vel.springdatajdbc.service.impl.CustomerAccessRowMapper;
-import com.vel.springdatajdbc.service.impl.CustomerApplicationRowMapper;
-import com.vel.springdatajdbc.service.impl.CustomerResultSetExtractor;
 
 
 @Repository

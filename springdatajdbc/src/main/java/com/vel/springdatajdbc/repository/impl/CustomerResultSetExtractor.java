@@ -1,4 +1,4 @@
-package com.vel.springdatajdbc.service.impl;
+package com.vel.springdatajdbc.repository.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
