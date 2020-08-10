@@ -47,7 +47,8 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 	
 	@Override
 	public List<Customers> getCustomersById(String loginId) {
-
+		
+		List<Customers> customersList = new ArrayList<Customers>();
 		String sql = "select \n" + 
 				"u.cus_id, u.cus_first_name, u.cus_last_name,\n" + 
 				"p.access_id, p.access_name,\n" + 
@@ -67,11 +68,11 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 				"and u.cus_status=0\n" + 
 				"and u.cus_login='"+loginId+"'";
 		
-		      List <Customers> customers = jdbcTemplate.query(sql, new ResultSetExtractor<List<Customers>>(){
+			
+			customersList = jdbcTemplate.query(sql, new ResultSetExtractor<List<Customers>>(){
 		         
-		         public List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException {
-		            
-		        	 
+		    public List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		            		        	 
 		        	List<Customers> list = new ArrayList<Customers>();
 		        	Customers customer = new Customers();
 		        	Applications application = new Applications();
@@ -104,7 +105,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		            return list;  
 				 	}   	  
 		      });
-		      return customers;
+		      return customersList;
 	}
 
 	@Override
@@ -456,6 +457,82 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		
 		response.setCustomers(customer);		
 		return response;
+	}
+
+	@Override
+	public GetAllCustomersResponse deleteCustomers(String loginId) {
+		
+		GetAllCustomersResponse response = new GetAllCustomersResponse();
+		customer = new Customers();
+		int noOfCustomerRowsAffected = 0;
+		
+		try {
+			//Check for existing customer id
+			String sql = "select \n" + 
+					"* \n" + 
+					"from \n" + 
+					"springdatajdbc.customers u \n" + 
+					"where \n" +
+					"u.cus_login='"+loginId+"'";
+				
+				List <Customers> customerList = jdbcTemplate.query(sql, new CustomerResultSetExtractor());
+				
+				if(customerList.size()>0) {
+					customer = customerList.get(0);	
+					
+					if(customer.getCustomer_status().equals("1")) {
+						response.setCustomers(customer);
+						response.setErrorMessage("Customer details are already deleted");
+						}else {											
+						String customersql="update springdatajdbc.customers set cus_status=:status "
+								+ "where cus_login=:login";
+						
+						Map<String,Object> customerMap=new HashMap<String,Object>(); 
+						customerMap.put("login",loginId);
+						customerMap.put("status","1");
+						noOfCustomerRowsAffected = namedParameterJdbcTemplate.update(customersql, customerMap);	
+						
+						if(noOfCustomerRowsAffected>0) {
+							response.setCustomers(customer);
+							response.setSuccessMessage("Customer details are deleted successfully");
+						}
+						}
+					}else {
+					response.setCustomers(customer);
+					response.setErrorMessage("Customer details does not exits");
+				}
+			
+		}catch(Exception e) {
+			response.setErrorMessage(e.toString());
+		}
+		
+		response.setCustomers(customer);
+		return response;
+	}
+	
+	public class NewCustomerResultSetExtractor implements ResultSetExtractor<List<Customers>>  {
+
+		@Override
+		public List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException {
+			List<Customers> customersList = new ArrayList<Customers>();
+			Customers customer = new Customers();
+			while(rs.next()){			 
+			customer.setCustomer_login(rs.getString("cus_login"));
+			customer.setCustomer_id(rs.getString("cus_id"));
+			customer.setCustomer_first_name(rs.getString("cus_first_name"));
+			customer.setCustomer_last_name(rs.getString("cus_last_name"));
+			customer.setCustomer_email(rs.getString("cus_email"));
+			customer.setCustomer_fax(rs.getString("cus_fax"));
+			customer.setCustomer_iso_code(rs.getString("cus_iso_code"));
+			customer.setCustomer_language(rs.getString("cus_language"));
+			customer.setCustomer_serial_no(rs.getString("cus_serial_no"));
+			customer.setCustomer_status(rs.getString("cus_status"));
+			customer.setCustomer_telephone(rs.getString("cus_telephone"));
+			customersList.add(customer);
+			}
+			return customersList;
+		}
+
 	}
 
 }

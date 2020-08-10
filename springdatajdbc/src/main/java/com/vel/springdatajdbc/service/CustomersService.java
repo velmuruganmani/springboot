@@ -12,4 +12,5 @@ public interface CustomersService {
 	List<Customers> getAllCustomers(GetAllCustomersRequest request);
 	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest);
 	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest);
+	GetAllCustomersResponse deleteCustomers(String loginId);
 }

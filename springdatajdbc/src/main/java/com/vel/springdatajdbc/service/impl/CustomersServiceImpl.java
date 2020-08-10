@@ -40,4 +40,10 @@ public class CustomersServiceImpl implements CustomersService {
 		return user;
 	}
 
+	@Override
+	public GetAllCustomersResponse deleteCustomers(String loginId) {
+		GetAllCustomersResponse user = customersRepository.deleteCustomers(loginId);
+		return user;
+	}
+
 }
