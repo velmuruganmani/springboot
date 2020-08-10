@@ -57,5 +57,17 @@ public class CustomersController {
         
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
+	
+	@PostMapping("/post/editUser")
+    public ResponseEntity<?> editCustomers(@RequestBody AddCustomersRequest editCustomersRequest) throws Exception{
+		
+		GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
+		
+		if(user.getErrorMessage()!=null) {
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		}
+        
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
 }

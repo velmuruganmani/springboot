@@ -277,7 +277,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 						String applicationsql="insert into springdatajdbc.customers_access values "
 								+ "(:id,:appconfigid,:appid,:accessid)";
 						Map<String,Object> accessMap=new HashMap<String,Object>(); 
-						accessMap.put("id",addCustomersRequest.getCus_id());  
+						accessMap.put("id",String.valueOf(cusid));  
 						if(applicationsConfig.get(i).getApplication_id().equals(applications.get(i).getApplication_id())) {
 						accessMap.put("appconfigid",applicationsConfig.get(i).getApplication_config_id());
 						}
@@ -287,7 +287,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		            
 						if(noOfApplicationRowsAffected>0) {
 							customer.setCustomer_first_name(addCustomersRequest.getCus_first_name());
-							customer.setCustomer_login(addCustomersRequest.getCus_last_name());
+							customer.setCustomer_login(addCustomersRequest.getCus_login());
 							customer.setCustomer_email(addCustomersRequest.getCus_email());
 							customer.setCustomer_fax(addCustomersRequest.getCus_fax());
 							customer.setCustomer_id(String.valueOf(cusid));
@@ -318,6 +318,143 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		}
 		
 		response.setCustomers(customer);
+		return response;
+	}
+
+	@Override
+	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) {
+		
+		GetAllCustomersResponse response = new GetAllCustomersResponse();
+		int noOfCustomerRowsAffected = 0;
+		int noOfApplicationRowsAffected = 0;
+		customer = new Customers();
+		
+		try {
+			//Check for existing customer id
+			String sql = "select \n" + 
+					"* \n" + 
+					"from \n" + 
+					"springdatajdbc.customers u \n" + 
+					"where \n" + 
+					"u.cus_id='"+editCustomersRequest.getCus_id()+"'";
+				
+				List <Customers> customerList = jdbcTemplate.query(sql, new CustomerResultSetExtractor());
+				
+				if(customerList.size()>0) {
+					
+					List<Applications> applications = new ArrayList<Applications>();
+					List<Applications> applicationList = new ArrayList<Applications>();
+					List<Access> accessList = new ArrayList<Access>();
+					List<ApplicationsConfig> applicationsConfigList = new ArrayList<ApplicationsConfig>();
+					List<ApplicationsConfig> applicationsConfig = new ArrayList<ApplicationsConfig>();
+					
+					for (int i = 0; i < editCustomersRequest.getApplicationAccessDetails().size(); i++) 
+		             {
+						String cus_app_name = editCustomersRequest.getApplicationAccessDetails().get(i).getApp_name();
+						String cus_app_access_name = editCustomersRequest.getApplicationAccessDetails().get(i).getApp_access_name();
+						String appsql = "select \n" + 
+								"* \n" + 
+								"from \n" + 
+								"springdatajdbc.applications a \n" + 
+								"where \n" + 
+								"a.app_name='"+cus_app_name+"'";
+						applicationList  = jdbcTemplate.query(appsql, new CustomerApplicationRowMapper());
+						
+						String accesssql = "select \n" + 
+								"* \n" + 
+								"from \n" + 
+								"springdatajdbc.access ac \n" + 
+								"where \n" + 
+								"ac.access_name='"+cus_app_access_name+"'";
+						accessList  = jdbcTemplate.query(accesssql, new CustomerAccessRowMapper());
+											
+						if(i<=editCustomersRequest.getApplicationAccessDetails().size()) {
+							applicationList.get(0).setAccessDetails(accessList);
+							applications.add(applicationList.get(0));
+		
+							String appconfigsql = "select \n" + 
+									"* \n" + 
+									"from \n" + 
+									"springdatajdbc.applications_config c \n" + 
+									"where \n" + 
+									"c.app_id='"+applicationList.get(0).getApplication_id()+"'"; 					
+							applicationsConfigList = jdbcTemplate.query(appconfigsql, new ApplicationsConfigAccessRowMapper());
+							applicationsConfig.add(applicationsConfigList.get(0));
+						}
+										
+		             }
+					customer.setApplicationsDetails(applications);
+					
+					String customersql="update springdatajdbc.customers set cus_first_name=:firstname, "
+							+ "cus_last_name=:lastname, cus_telephone=:telephone, cus_email=:email, cus_status=:status, "
+							+ "cus_iso_code=:isocode, cus_fax=:fax, cus_language=:language, cus_serial_no=:serialno "
+							+ "where cus_id=:id and cus_login=:login";
+					Map<String,Object> customerMap=new HashMap<String,Object>();  
+					customerMap.put("id",editCustomersRequest.getCus_id());  
+					customerMap.put("login",editCustomersRequest.getCus_login());  
+					customerMap.put("firstname",editCustomersRequest.getCus_first_name());
+					customerMap.put("lastname",editCustomersRequest.getCus_last_name());
+					customerMap.put("telephone",editCustomersRequest.getCus_telephone());
+					customerMap.put("email",editCustomersRequest.getCus_email());
+					customerMap.put("status",editCustomersRequest.getCus_status());
+					customerMap.put("isocode",editCustomersRequest.getCus_iso_code());
+					customerMap.put("fax",editCustomersRequest.getCus_fax());
+					customerMap.put("language",editCustomersRequest.getCus_language());
+					customerMap.put("serialno",editCustomersRequest.getCus_serial_no());
+					noOfCustomerRowsAffected = namedParameterJdbcTemplate.update(customersql, customerMap);			
+					
+					if(noOfCustomerRowsAffected>0) {
+						for (int i = 0; i < applications.size(); i++) 
+			            {
+							String applicationsql="update springdatajdbc.customers_access set "
+									+ "access_id=:accessid where cus_id=:id and app_id=:appid and appconfig_id=:appconfigid";
+							
+							Map<String,Object> accessMap=new HashMap<String,Object>(); 
+							accessMap.put("id",editCustomersRequest.getCus_id());  
+							if(applicationsConfig.get(i).getApplication_id().equals(applications.get(i).getApplication_id())) {
+							accessMap.put("appconfigid",applicationsConfig.get(i).getApplication_config_id());
+							}
+							accessMap.put("appid", applications.get(i).getApplication_id());
+							accessMap.put("accessid",applications.get(i).getAccessDetails().get(0).getApp_access_id());	
+							
+							noOfApplicationRowsAffected = namedParameterJdbcTemplate.update(applicationsql, accessMap);
+			            
+							if(noOfApplicationRowsAffected>0) {
+								customer.setCustomer_first_name(editCustomersRequest.getCus_first_name());
+								customer.setCustomer_login(editCustomersRequest.getCus_login());
+								customer.setCustomer_email(editCustomersRequest.getCus_email());
+								customer.setCustomer_fax(editCustomersRequest.getCus_fax());
+								customer.setCustomer_id(editCustomersRequest.getCus_id());
+								customer.setCustomer_iso_code(editCustomersRequest.getCus_iso_code());
+								customer.setCustomer_language(editCustomersRequest.getCus_language());
+								customer.setCustomer_last_name(editCustomersRequest.getCus_last_name());
+								customer.setCustomer_serial_no(editCustomersRequest.getCus_serial_no());
+								customer.setCustomer_status(editCustomersRequest.getCus_status());
+								customer.setCustomer_telephone(editCustomersRequest.getCus_telephone());
+								response.setCustomers(customer);
+								response.setSuccessMessage("Customer details are updated successfully");
+							}else {
+								response.setCustomers(customer);
+								response.setErrorMessage("Customer details are updated but application access is not created");
+							}
+			            }
+					}else {
+						response.setCustomers(customer);
+						response.setErrorMessage("Customer details is not updated");
+					}								
+					return response;
+					
+				}else {	
+					response.setCustomers(customer);
+					response.setErrorMessage("Customer details does not exits");
+				}
+			
+			
+		}catch(Exception e) {
+			response.setErrorMessage(e.toString());
+		}
+		
+		response.setCustomers(customer);		
 		return response;
 	}
 

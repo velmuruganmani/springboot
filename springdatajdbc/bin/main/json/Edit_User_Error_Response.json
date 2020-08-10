@@ -1,0 +1,18 @@
+{
+    "errorMessage": "Customer details does not exits",
+    "successMessage": null,
+    "customers": {
+        "cus_login": null,
+        "cus_id": null,
+        "cus_first_name": null,
+        "cus_last_name": null,
+        "cus_telephone": null,
+        "cus_email": null,
+        "cus_status": null,
+        "cus_iso_code": null,
+        "cus_fax": null,
+        "cus_language": null,
+        "cus_serial_no": null,
+        "applications": null
+    }
+}

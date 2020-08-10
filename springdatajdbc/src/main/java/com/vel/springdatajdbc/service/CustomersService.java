@@ -11,4 +11,5 @@ public interface CustomersService {
 	List<Customers> getCustomersById(String loginId);
 	List<Customers> getAllCustomers(GetAllCustomersRequest request);
 	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest);
+	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest);
 }

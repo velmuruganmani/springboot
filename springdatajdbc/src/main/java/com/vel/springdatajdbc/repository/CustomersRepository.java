@@ -16,4 +16,5 @@ public interface CustomersRepository {
 	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest);
 	//Customers mapRow(ResultSet rs, int rowNum) throws SQLException;
 	//List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException;
+	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest);
 }

@@ -1,0 +1,18 @@
+{
+    "errorMessage": "Customer Login ID is already exits",
+    "successMessage": null,
+    "customers": {
+        "cus_login": "velmani5",
+        "cus_id": "104",
+        "cus_first_name": "Vel",
+        "cus_last_name": "Murugan",
+        "cus_telephone": "123456",
+        "cus_email": "velmani1@gmail.com",
+        "cus_status": "0",
+        "cus_iso_code": "EUR",
+        "cus_fax": "12345",
+        "cus_language": "ENG",
+        "cus_serial_no": "0",
+        "applications": null
+    }
+}

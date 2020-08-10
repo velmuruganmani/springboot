@@ -34,4 +34,10 @@ public class CustomersServiceImpl implements CustomersService {
 		return user;
 	}
 
+	@Override
+	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) {
+		GetAllCustomersResponse user = customersRepository.editCustomers(editCustomersRequest);
+		return user;
+	}
+
 }

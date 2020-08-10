@@ -1,15 +1,15 @@
 {
-    "cus_id": "99",
-    "cus_login": "velmani",
+    "cus_id": "105",
+    "cus_login": "velmani6",
     "cus_first_name": "Vel",
-    "cus_last_name": "Murugan",
-    "cus_telephone": "123456",
-    "cus_email": "velmani1@gmail.com",
+    "cus_last_name": "Murugan Mani",
+    "cus_telephone": "12345678",
+    "cus_email": "velmani@gmail.com",
     "cus_status": "0",
     "cus_iso_code": "EUR",
-    "cus_fax": "12345",
+    "cus_fax": "123456",
     "cus_language": "ENG",
-    "cus_serial_no": "0",
+    "cus_serial_no": "123",
     "applicationAccessDetails": [
         {
             "app_module_name": "Global Profile",
@@ -18,7 +18,7 @@
         },
         {
             "app_module_name": "Global Profile",
-            "app_access_name": "Reader",
+            "app_access_name": "Admin",
             "app_name": "Customers Application 2"
         },
         { 

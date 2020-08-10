@@ -1,0 +1,49 @@
+{
+    "errorMessage": null,
+    "successMessage": "Customer Login ID created successfully",
+    "customers": {
+        "cus_login": "velmani6",
+        "cus_id": "105",
+        "cus_first_name": "Vel",
+        "cus_last_name": "Murugan",
+        "cus_telephone": "123456",
+        "cus_email": "velmani1@gmail.com",
+        "cus_status": "0",
+        "cus_iso_code": "EUR",
+        "cus_fax": "12345",
+        "cus_language": "ENG",
+        "cus_serial_no": "0",
+        "applications": [
+            {
+                "app_id": "1",
+                "app_name": "Customers Application 1",
+                "access": [
+                    {
+                        "access_id": "1",
+                        "access_name": "Admin"
+                    }
+                ]
+            },
+            {
+                "app_id": "2",
+                "app_name": "Customers Application 2",
+                "access": [
+                    {
+                        "access_id": "3",
+                        "access_name": "Reader"
+                    }
+                ]
+            },
+            {
+                "app_id": "3",
+                "app_name": "Customers Application 3",
+                "access": [
+                    {
+                        "access_id": "1",
+                        "access_name": "Admin"
+                    }
+                ]
+            }
+        ]
+    }
+}

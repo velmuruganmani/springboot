@@ -1,0 +1,49 @@
+{
+    "errorMessage": null,
+    "successMessage": "Customer details are updated successfully",
+    "customers": {
+        "cus_login": "velmani6",
+        "cus_id": "105",
+        "cus_first_name": "Vel",
+        "cus_last_name": "Murugan Mani",
+        "cus_telephone": "12345678",
+        "cus_email": "velmani@gmail.com",
+        "cus_status": "0",
+        "cus_iso_code": "EUR",
+        "cus_fax": "123456",
+        "cus_language": "ENG",
+        "cus_serial_no": "123",
+        "applications": [
+            {
+                "app_id": "1",
+                "app_name": "Customers Application 1",
+                "access": [
+                    {
+                        "access_id": "1",
+                        "access_name": "Admin"
+                    }
+                ]
+            },
+            {
+                "app_id": "2",
+                "app_name": "Customers Application 2",
+                "access": [
+                    {
+                        "access_id": "1",
+                        "access_name": "Admin"
+                    }
+                ]
+            },
+            {
+                "app_id": "3",
+                "app_name": "Customers Application 3",
+                "access": [
+                    {
+                        "access_id": "1",
+                        "access_name": "Admin"
+                    }
+                ]
+            }
+        ]
+    }
+}
