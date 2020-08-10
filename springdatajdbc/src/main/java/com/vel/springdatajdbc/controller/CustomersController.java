@@ -50,6 +50,10 @@ public class CustomersController {
     public ResponseEntity<?> addCustomers(@RequestBody AddCustomersRequest addCustomersRequest) throws Exception{
 		
 		GetAllCustomersResponse user = customersService.addCustomers(addCustomersRequest);
+		
+		if(user.getErrorMessage()!=null) {
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		}
         
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
