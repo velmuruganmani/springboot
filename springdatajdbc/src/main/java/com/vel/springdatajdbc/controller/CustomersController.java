@@ -1,6 +1,10 @@
 package com.vel.springdatajdbc.controller;
 
 import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
 
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.service.CustomersService;
+import com.vel.springdatajdbc.validate.ValidationErrorResponse;
 
 
 @RestController
@@ -47,8 +54,9 @@ public class CustomersController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 	
+	//Added @Valid to validate AddCustomerRequest 
 	@PostMapping("/post/addUser")
-    public ResponseEntity<?> addCustomers(@RequestBody AddCustomersRequest addCustomersRequest) throws Exception{
+    public ResponseEntity<?> addCustomers(@RequestBody @Valid AddCustomersRequest addCustomersRequest) throws Exception{
 		
 		GetAllCustomersResponse user = customersService.addCustomers(addCustomersRequest);
 		

@@ -2,13 +2,27 @@ package com.vel.springdatajdbc.entities;
 
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 public class AddCustomersRequest {
 
+	//Annotations added for validation 
 	public String cus_id;
+	@NotBlank(message="Customer Login Id cannot be empty")
+	@Pattern(regexp = "^[a-zA-Z0-9]*$" , message = "Invalid format")
 	public String cus_login;
+	@NotBlank(message="First Name cannot be empty")
+	@Pattern(regexp = "^[a-zA-Z\\\\s']*$")
 	public String cus_first_name;	
+	@NotBlank(message="Last Name cannot be empty")
+	@Pattern(regexp = "^[a-zA-Z\\\\s']*$", message = "Invalid input for Name")
 	public String cus_last_name;
+	@NotBlank(message="Telephone cannot be empty")
 	public String cus_telephone;
+	@Email(message="Please provide a valid email address") 
+	@NotBlank(message="Please provide the email address")
 	public String cus_email;
 	public String cus_status;
 	public String cus_iso_code;
