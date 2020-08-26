@@ -1,10 +1,16 @@
 package com.vel.springdatajdbc.entities;
 
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 //import org.springframework.data.annotation.Id;
 //import org.springframework.data.relational.core.mapping.Column;
 //import org.springframework.data.relational.core.mapping.Table;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 //import com.fasterxml.jackson.annotation.JsonSetter;
 
@@ -13,7 +19,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "customer_login", "customer_id", "customer_first_name", "customer_last_name",
 	"customer_telephone","customer_email","customer_status","customer_iso_code","customer_fax",
 	"customer_language","customer_serial_no", "applications"})
-public class Customers {
+public class Customers implements UserDetails {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	//@Id
 	//@Column("cus_id")
@@ -50,6 +61,9 @@ public class Customers {
 	public String customer_serial_no;
 	
 	public List<Applications> applicationsDetails;
+	
+	public String username;
+	public String password;
 	
 	@JsonGetter("cus_id")
 	public String getCustomer_id() {
@@ -157,17 +171,66 @@ public class Customers {
 	public void setApplicationsDetails(List<Applications> applicationsDetails) {
 		this.applicationsDetails = applicationsDetails;
 	}
+
+	@JsonIgnore
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	@JsonIgnore
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 	@Override
 	public String toString() {
-		return "Customers [customer_id=" + customer_id + ", customer_login=" + customer_login
-				+ ", customer_first_name=" + customer_first_name + ", customer_last_name=" + customer_last_name
-				+ ", customer_telephone=" + customer_telephone + ", customer_email=" + customer_email
-				+ ", customer_status=" + customer_status + ", customer_iso_code=" + customer_iso_code
-				+ ", customer_fax=" + customer_fax + ", customer_language=" + customer_language
-				+ ", customer_serial_no=" + customer_serial_no + ", applicationsDetails=" + applicationsDetails + "]";
+		return "Customers [customer_id=" + customer_id + ", customer_login=" + customer_login + ", customer_first_name="
+				+ customer_first_name + ", customer_last_name=" + customer_last_name + ", customer_telephone="
+				+ customer_telephone + ", customer_email=" + customer_email + ", customer_status=" + customer_status
+				+ ", customer_iso_code=" + customer_iso_code + ", customer_fax=" + customer_fax + ", customer_language="
+				+ customer_language + ", customer_serial_no=" + customer_serial_no + ", applicationsDetails="
+				+ applicationsDetails + ", username=" + username + ", password=" + password + "]";
 	}
 	
+	/* UserDetails interface methods  - Start */
+	@Override
+	@JsonIgnore
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	@JsonIgnore
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	@JsonIgnore
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	@JsonIgnore
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	@JsonIgnore
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	/* UserDetails interface methods  - End */
 	
 	
 		
