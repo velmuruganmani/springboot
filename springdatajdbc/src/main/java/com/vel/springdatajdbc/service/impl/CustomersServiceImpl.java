@@ -1,8 +1,12 @@
 package com.vel.springdatajdbc.service.impl;
 
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
@@ -29,13 +33,15 @@ public class CustomersServiceImpl implements CustomersService {
 	}
 
 	@Override
-	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) {
-		GetAllCustomersResponse user = customersRepository.addCustomers(addCustomersRequest);
+	//@Transactional( propagation = Propagation.REQUIRED, rollbackFor =  {Exception.class, RuntimeException.class,})
+	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) throws SQLException{
+		GetAllCustomersResponse user;
+		user = customersRepository.addCustomers(addCustomersRequest);
 		return user;
 	}
 
 	@Override
-	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) {
+	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) throws SQLException {
 		GetAllCustomersResponse user = customersRepository.editCustomers(editCustomersRequest);
 		return user;
 	}
