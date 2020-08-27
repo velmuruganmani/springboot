@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 import com.vel.velsecurity.entities.User;
 import com.vel.velsecurity.repositories.UserRepository;
 
@@ -23,14 +23,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		return user;
 	}
-	
+	/*
 	@Transactional
 	public User loadUserById (Long id){
         User user = userRepository.getById(id);
         if(user==null) new UsernameNotFoundException("User not found");
         return user;
 
-    }
+    }*/
 
 	
 }
