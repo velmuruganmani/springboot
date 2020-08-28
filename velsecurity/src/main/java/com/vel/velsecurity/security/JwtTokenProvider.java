@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import com.vel.velsecurity.entities.User;
+import com.vel.velsecurity.entities.Customers;
+//import com.vel.velsecurity.entities.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import static com.vel.velsecurity.security.SecurityConstants.EXPIRATION_TIME;
@@ -15,18 +16,25 @@ import static com.vel.velsecurity.security.SecurityConstants.SECRET;
 public class JwtTokenProvider {
 
 	public String generateToken(Authentication authentication){
-		
+		/*
 		User user = (User)authentication.getPrincipal();
-		String userId = Long.toString(user.getId());
-		
+		String userId = Long.toString(user.getId());	
 		Date now = new Date(System.currentTimeMillis());		
-        Date expiryDate = new Date(now.getTime()+EXPIRATION_TIME);
-        
-        
+        Date expiryDate = new Date(now.getTime()+EXPIRATION_TIME);      
         Map<String,Object> claims = new HashMap<>();
         claims.put("id", userId);
         claims.put("username", user.getUsername());
         claims.put("name", user.getName());
+        */
+        
+		Customers customer = (Customers)authentication.getPrincipal();
+		String userId = Long.toString(customer.getId());	
+		Date now = new Date(System.currentTimeMillis());		
+        Date expiryDate = new Date(now.getTime()+EXPIRATION_TIME);      
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("id", userId);
+        claims.put("username", customer.getCustomerloginid());
+        claims.put("customername", customer.getCustomername());
 		
 		return Jwts.builder()
                 .setSubject(userId)

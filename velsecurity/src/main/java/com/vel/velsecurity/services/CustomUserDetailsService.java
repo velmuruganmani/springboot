@@ -5,24 +5,29 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.vel.velsecurity.entities.Customers;
 //import org.springframework.transaction.annotation.Transactional;
-import com.vel.velsecurity.entities.User;
-import com.vel.velsecurity.repositories.UserRepository;
+//import com.vel.velsecurity.entities.User;
+import com.vel.velsecurity.repositories.CustomersRepository;
+//import com.vel.velsecurity.repositories.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	
+	/*@Autowired
+    private UserRepository userRepository;*/
+	
 	@Autowired
-    private UserRepository userRepository;
+    private CustomersRepository customersRepository;
 
-	@Override
+	/*@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		User user = userRepository.findByUsername(username);
 		if(user==null) new UsernameNotFoundException("User not found");
 		
 		return user;
-	}
+	}*/
 	/*
 	@Transactional
 	public User loadUserById (Long id){
@@ -31,6 +36,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user;
 
     }*/
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		Customers customer = customersRepository.findByCustomerloginid(username);
+		if(customer==null) new UsernameNotFoundException("User not found");
+		customer.setUsername(customer.getCustomerloginid());
+		customer.setPassword(customer.getCustomerpassword());
+		return customer;
+	}
 
 	
 }
