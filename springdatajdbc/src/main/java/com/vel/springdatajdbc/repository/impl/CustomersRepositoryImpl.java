@@ -188,7 +188,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) throws SQLException {
+	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) {
 
 		GetAllCustomersResponse response = new GetAllCustomersResponse();
 		int noOfCustomerRowsAffected = 0;
@@ -318,11 +318,20 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 			}
 
 		} catch (SQLException e) {
-			connection.rollback();
-			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		finally {
-			connection.close();
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		response.setCustomers(customer);
@@ -331,7 +340,7 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) throws SQLException {
+	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest){
 
 		GetAllCustomersResponse response = new GetAllCustomersResponse();
 		int noOfCustomerRowsAffected = 0;
@@ -448,11 +457,20 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 			}
 
 		} catch (SQLException e) {
-			connection.rollback();
-			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		finally {
-			connection.close();
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		response.setCustomers(customer);
@@ -510,4 +528,22 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 		return response;
 	}
 
+	@Override
+	@Transactional
+	public boolean checkUserExists(String userId){
+		
+
+		boolean userExists = false;
+		// Check for duplicate loginId
+			String sql = "select \n" + "* \n" + "from \n" + "springdatajdbc.customers u \n" + "where \n"
+					+ "u.cus_login='" + userId + "'";
+
+			List<Customers> customerList = jdbcTemplate.query(sql, new CustomerResultSetExtractor());
+
+			if (customerList.size() > 0) {
+				userExists = true;
+			}
+				return userExists;
+
+	}
 }

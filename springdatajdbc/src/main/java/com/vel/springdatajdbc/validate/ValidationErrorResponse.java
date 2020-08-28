@@ -1,32 +1,42 @@
 package com.vel.springdatajdbc.validate;
 
+import java.util.Date;
+
 /**
  * @author Brindha
  * Created for validation
  */
-import java.io.Serializable;
 
-public class ValidationErrorResponse implements Serializable{
+import java.util.List;
 
-	private static final long serialVersionUID = 1L;
+public class ValidationErrorResponse{
+
+	private Date timestamp;
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
 	private String errorMessage;
-	private String requestDescription;
+	private List<String> requestDescription;
 	public String getErrorMessage() {
 		return errorMessage;
 	}
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-	public String getRequestDescription() {
+	public List<String> getRequestDescription() {
 		return requestDescription;
 	}
-	public void setRequestDescription(String requestDescription) {
+	public void setRequestDescription(List<String> requestDescription) {
 		this.requestDescription = requestDescription;
 	}
-	public ValidationErrorResponse(String errorMessage, String requestDescription) {
+	public ValidationErrorResponse(Date timestamp, String errorMessage, List<String> requestDescription) {
 		super();
+		this.timestamp = timestamp;
 		this.errorMessage = errorMessage;
 		this.requestDescription = requestDescription;
 	}
-
+	
 }

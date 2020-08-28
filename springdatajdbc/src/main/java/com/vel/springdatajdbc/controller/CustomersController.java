@@ -6,6 +6,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,12 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.service.CustomersService;
+import com.vel.springdatajdbc.validate.UserNotFoundException;
 import com.vel.springdatajdbc.validate.ValidationErrorResponse;
 
 
@@ -83,7 +88,10 @@ public class CustomersController {
     public ResponseEntity<?> deleteCustomers(@PathVariable String loginId) throws Exception{
 		
 		GetAllCustomersResponse user = customersService.deleteCustomers(loginId);
-		        
+		 
+		if(user.getErrorMessage()!=null) {
+			throw new UserNotFoundException("Invalid customer id : " + loginId);
+		}
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

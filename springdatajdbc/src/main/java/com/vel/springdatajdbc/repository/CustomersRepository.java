@@ -14,9 +14,10 @@ public interface CustomersRepository {
 
 	List<Customers> getCustomersById(String loginId);
 	List<Customers> getAllCustomers(GetAllCustomersRequest request);
-	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) throws SQLException;
+	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest);
 	//Customers mapRow(ResultSet rs, int rowNum) throws SQLException;
 	//List<Customers> extractData(ResultSet rs) throws SQLException, DataAccessException;
-	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) throws SQLException;
+	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest);
 	GetAllCustomersResponse deleteCustomers(String loginId);
+	boolean checkUserExists(String userId);
 }

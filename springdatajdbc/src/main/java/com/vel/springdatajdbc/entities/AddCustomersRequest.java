@@ -6,12 +6,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.vel.springdatajdbc.validate.UserExistsCheck;
+
 public class AddCustomersRequest {
 
 	//Annotations added for validation 
 	public String cus_id;
 	@NotBlank(message="Customer Login Id cannot be empty")
 	@Pattern(regexp = "^[a-zA-Z0-9]*$" , message = "Invalid format")
+	@UserExistsCheck
 	public String cus_login;
 	@NotBlank(message="First Name cannot be empty")
 	@Pattern(regexp = "^[a-zA-Z\\\\s']*$")

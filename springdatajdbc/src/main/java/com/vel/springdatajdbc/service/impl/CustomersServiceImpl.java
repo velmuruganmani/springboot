@@ -34,14 +34,14 @@ public class CustomersServiceImpl implements CustomersService {
 
 	@Override
 	//@Transactional( propagation = Propagation.REQUIRED, rollbackFor =  {Exception.class, RuntimeException.class,})
-	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) throws SQLException{
+	public GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest){
 		GetAllCustomersResponse user;
 		user = customersRepository.addCustomers(addCustomersRequest);
 		return user;
 	}
 
 	@Override
-	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) throws SQLException {
+	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest){
 		GetAllCustomersResponse user = customersRepository.editCustomers(editCustomersRequest);
 		return user;
 	}
@@ -52,4 +52,9 @@ public class CustomersServiceImpl implements CustomersService {
 		return user;
 	}
 
+	@Override
+	public boolean checkUserExists (String userId) {
+		boolean userExists = customersRepository.checkUserExists(userId);
+		return userExists;
+	}
 }

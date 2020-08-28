@@ -11,7 +11,8 @@ public interface CustomersService {
 
 	List<Customers> getCustomersById(String loginId);
 	List<Customers> getAllCustomers(GetAllCustomersRequest request);
-	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest) throws SQLException;
-	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) throws SQLException;
+	GetAllCustomersResponse addCustomers(AddCustomersRequest addCustomersRequest);
+	GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest);
 	GetAllCustomersResponse deleteCustomers(String loginId);
+	boolean checkUserExists(String userId);
 }
