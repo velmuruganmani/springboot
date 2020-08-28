@@ -2,10 +2,8 @@ package com.vel.springdatajdbc.entities;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 //import org.springframework.data.annotation.Id;
 //import org.springframework.data.relational.core.mapping.Column;
 //import org.springframework.data.relational.core.mapping.Table;

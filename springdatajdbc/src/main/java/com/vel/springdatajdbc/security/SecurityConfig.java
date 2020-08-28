@@ -3,7 +3,6 @@ package com.vel.springdatajdbc.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -42,11 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
        
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
-		/*auth.inMemoryAuthentication()
-        .withUser("user").password("{noop}password").roles("USER")
-        .and()
-        .withUser("admin").password("{noop}password").roles("ADMIN");*/
+		auth
+		.userDetailsService(customUserDetailsService)
+		.passwordEncoder(bCryptPasswordEncoder);
 	}
 	
 	@Override
@@ -57,34 +54,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	http.cors()
-         .and()
-     .csrf()
-         .disable()
-     .exceptionHandling()
-         .authenticationEntryPoint(unauthorizedHandler)
-         .and()
-     .sessionManagement()
-         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-         .and()         
-     .authorizeRequests()
-         .antMatchers("/",
-             "/favicon.ico",
-             "/**/*.png",
-             "/**/*.gif",
-             "/**/*.svg",
-             "/**/*.jpg",
-             "/**/*.html",
-             "/**/*.css",
-             "/**/*.js")
-             .permitAll()
-         .antMatchers("/api/auth/**")
-             .permitAll()
-         .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
-             .permitAll()
-         .antMatchers(HttpMethod.POST, "/api/users/**").access("ROLE_ADMIN")
-         .anyRequest()
-             .authenticated();	
-	}
+		http.cors().and()
+		.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .headers().frameOptions().sameOrigin() //To enable H2 Database
+        .and()
+        .authorizeRequests()
+        .antMatchers(
+                "/",
+                "/favicon.ico",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.svg",
+                "/**/*.jpg",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js"
+        ).permitAll()
+        .antMatchers(SIGN_UP_URLS).permitAll()
+        .antMatchers(H2_URL).permitAll()
+        .anyRequest().authenticated();		
+}
 	
 }

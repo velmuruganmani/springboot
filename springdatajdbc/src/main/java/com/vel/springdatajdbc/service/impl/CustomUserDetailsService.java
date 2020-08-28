@@ -23,8 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		customersList= customersRepository.getCustomersById(loginId);
 		Customers customers = customersList.get(0);
 		if(customers==null) new UsernameNotFoundException("User not found");
-		customers.setUsername("username");
-		customers.setPassword("password");
+		customers.setUsername(customers.getCustomer_login());
+		customers.setPassword("$2a$10$JlyeWI467P8wIZdCQc0NRecK5/aRyT1KJ/UTbl29ZrDlL3v7rCGFu");
 		return customers;
 	}
 
