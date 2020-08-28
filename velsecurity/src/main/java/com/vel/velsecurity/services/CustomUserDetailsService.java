@@ -44,7 +44,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 		if(customer==null) new UsernameNotFoundException("User not found");
 		customer.setUsername(customer.getCustomerloginid());
 		//customer.setPassword(customer.getCustomerpassword());
-		//myaxalmpassword
 		customer.setPassword("$2a$10$JlyeWI467P8wIZdCQc0NRecK5/aRyT1KJ/UTbl29ZrDlL3v7rCGFu");
 		return customer;
 	}
