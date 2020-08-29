@@ -15,6 +15,7 @@ import com.vel.springdatajdbc.service.impl.CustomUserDetailsService;
 import static com.vel.springdatajdbc.security.SecurityConstants.SIGN_UP_URLS;
 import static com.vel.springdatajdbc.security.SecurityConstants.H2_URL;
 import org.springframework.security.config.BeanIds;
+import static com.vel.springdatajdbc.security.SecurityConstants.GET_URLS;
 
 @Configuration
 @EnableWebSecurity
@@ -74,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/**/*.js"
         ).permitAll()
         .antMatchers(SIGN_UP_URLS).permitAll()
+        .antMatchers(GET_URLS).permitAll()
         .antMatchers(H2_URL).permitAll()
         .anyRequest().authenticated();		
 }
