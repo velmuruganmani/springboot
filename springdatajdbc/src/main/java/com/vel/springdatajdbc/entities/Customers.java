@@ -2,6 +2,7 @@ package com.vel.springdatajdbc.entities;
 
 import java.util.Collection;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.data.annotation.Id;
@@ -26,9 +27,11 @@ public class Customers implements UserDetails {
 
 	//@Id
 	//@Column("cus_id")
+	@NotBlank(message = "customer id is required")
 	public String customer_id;
 	
 	//@Column("cus_login")
+	@NotBlank(message = "customer login is required")
 	public String customer_login;
 	
 	//@Column("cus_first_name")
