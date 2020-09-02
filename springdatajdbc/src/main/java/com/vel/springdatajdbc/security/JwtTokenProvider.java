@@ -44,6 +44,7 @@ public boolean validateToken(String token){
         Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
         return true;
     }catch (SignatureException ex){
+    	//need to catch
         System.out.println("Invalid JWT Signature");
     }catch (MalformedJwtException ex){
         System.out.println("Invalid JWT Token");
