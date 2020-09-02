@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vel.springdatajdbc.entities.JWTLoginSucessReponse;
 import com.vel.springdatajdbc.entities.LoginRequest;
 import com.vel.springdatajdbc.security.JwtTokenProvider;
+import com.vel.springdatajdbc.service.CustomersService;
 import com.vel.springdatajdbc.service.impl.MapValidationErrorService;
 import static com.vel.springdatajdbc.security.SecurityConstants.TOKEN_PREFIX;
 import javax.validation.Valid;
@@ -32,6 +33,9 @@ public class LoginController {
     
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
+    
+    @Autowired
+	CustomersService customersService;
     
     
 	@GetMapping("/loginhome")

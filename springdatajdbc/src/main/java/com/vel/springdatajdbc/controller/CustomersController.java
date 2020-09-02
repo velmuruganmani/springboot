@@ -1,9 +1,13 @@
 package com.vel.springdatajdbc.controller;
 
 import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,20 +15,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.service.CustomersService;
+import com.vel.springdatajdbc.service.impl.MapValidationErrorService;
 
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/users/customers")
 public class CustomersController {
 	
 	@Autowired
 	CustomersService customersService;
+	
+	 @Autowired
+	 private MapValidationErrorService mapValidationErrorService;
 	
 	@GetMapping("/home")
 	public ResponseEntity<?> home() {	
@@ -60,7 +67,10 @@ public class CustomersController {
     }
 	
 	@PostMapping("/post/editUser")
-    public ResponseEntity<?> editCustomers(@RequestBody AddCustomersRequest editCustomersRequest) throws Exception{
+    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, BindingResult result) throws Exception{
+		
+		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null) return errorMap;
 		
 		GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
 		
