@@ -1,8 +1,12 @@
 package com.vel.springdatajdbc.security;
 
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import com.vel.springdatajdbc.entities.Customers;
@@ -13,6 +17,7 @@ import static com.vel.springdatajdbc.security.SecurityConstants.SECRET;
 
 @Component
 public class JwtTokenProvider {
+	
 
 public String generateToken(Authentication authentication){
 		
@@ -39,17 +44,18 @@ public String generateToken(Authentication authentication){
 	}
 
 //Validate the token
-public boolean validateToken(String token){
+public boolean validateToken(String token, HttpServletRequest httpServletRequest) throws ServletException {
     try{
         Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
         return true;
     }catch (SignatureException ex){
-    	//need to catch
         System.out.println("Invalid JWT Signature");
     }catch (MalformedJwtException ex){
         System.out.println("Invalid JWT Token");
     }catch (ExpiredJwtException ex){
         System.out.println("Expired JWT token");
+        //httpServletRequest.setAttribute("expired",ex.getMessage());     
+        //throw new ServletException(ex.toString());
     }catch (UnsupportedJwtException ex){
         System.out.println("Unsupported JWT token");
     }catch (IllegalArgumentException ex){

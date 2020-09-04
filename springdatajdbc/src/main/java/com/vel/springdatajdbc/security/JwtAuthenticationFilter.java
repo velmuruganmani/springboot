@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.util.Collections;
 import com.vel.springdatajdbc.entities.Customers;
+//import com.vel.springdatajdbc.exceptions.JwtException;
 import com.vel.springdatajdbc.service.impl.CustomUserDetailsService;
 import static com.vel.springdatajdbc.security.SecurityConstants.HEADER_STRING;
 import static com.vel.springdatajdbc.security.SecurityConstants.TOKEN_PREFIX;
@@ -32,8 +33,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		try {
 
             String jwt = getJWTFromRequest(request);
+            boolean token = false;
+            if(StringUtils.hasText(jwt)) {
+            	token = tokenProvider.validateToken(jwt, request);
+            	if(token==false) {
+                	//throw new JwtException(jwt);
+            		throw new ServletException("token_expired");
+                }
+            }
 
-            if(StringUtils.hasText(jwt)&& tokenProvider.validateToken(jwt)){
+            if(StringUtils.hasText(jwt) && token){            	
                 String userLoginId = tokenProvider.getUserIdFromJWT(jwt);
                 Customers userDetails = (Customers) customUserDetailsService.loadUserByUsername(userLoginId);
 
@@ -45,8 +54,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             }
 
-        }catch (Exception ex){
-            logger.error("Could not set user authentication in security context", ex);
+        }/*catch (JwtException ex){
+        	throw new ServletException("token_expired");       	
+        	//response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"expired");
+        }*/
+		catch (ServletException ex){
+            throw new ServletException("token_expired");
+        }
+		catch (Exception ex){
+			//response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Login details");
+            //logger.error("Could not set user authentication in security context", ex);
+            //throw new ServletException("token_expired");
         }
         filterChain.doFilter(request, response);
 		

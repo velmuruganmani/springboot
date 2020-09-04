@@ -24,4 +24,5 @@ public class InvalidLoginResponse {
     public void setPassword(String password) {
         this.password = password;
     }
+    
 }

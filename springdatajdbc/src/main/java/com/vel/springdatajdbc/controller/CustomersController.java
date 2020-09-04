@@ -1,20 +1,22 @@
 package com.vel.springdatajdbc.controller;
 
 import java.util.List;
-
+//import javax.servlet.ServletException;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
@@ -24,7 +26,9 @@ import com.vel.springdatajdbc.service.impl.MapValidationErrorService;
 
 
 @RestController
+//@RestControllerAdvice
 @RequestMapping("/api/users/customers")
+@CrossOrigin
 public class CustomersController {
 	
 	@Autowired
@@ -32,6 +36,7 @@ public class CustomersController {
 	
 	 @Autowired
 	 private MapValidationErrorService mapValidationErrorService;
+	 
 	
 	@GetMapping("/home")
 	public ResponseEntity<?> home() {	
@@ -67,18 +72,24 @@ public class CustomersController {
     }
 	
 	@PostMapping("/post/editUser")
-    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, BindingResult result) throws Exception{
+	//@ExceptionHandler(value = { ServletException.class })
+    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, BindingResult result) throws 
+    Exception{
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null) return errorMap;
-		
-		GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
-		
-		if(user.getErrorMessage()!=null) {
+        /*
+        String message = e.getMessage();
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        if (message!=null && message.equals("token_expired")) {
+        	httpStatus = HttpStatus.UNAUTHORIZED;
+        	message = "the token is expired and not valid anymore";
+        	return new ResponseEntity<>(message, httpStatus);
+        }else {	*/	
+        	GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
 			return new ResponseEntity<>(user, HttpStatus.OK);
-		}
-        
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        //}
+        //return new ResponseEntity<>(user, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/delete/{loginId}")

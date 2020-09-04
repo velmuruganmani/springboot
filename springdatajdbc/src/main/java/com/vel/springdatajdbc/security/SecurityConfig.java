@@ -32,20 +32,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
     private CustomUserDetailsService customUserDetailsService;
-
+	
+	@Bean
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		return new JwtAuthenticationFilter();
+	}
+		
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     
+   
 	@Bean
     BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
-	
-	@Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {return  new JwtAuthenticationFilter();}
-	
-       
+	     
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
@@ -61,8 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and()
-		.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+		http.cors()
+		.and()
+		.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+		.and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
@@ -83,7 +86,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(SIGN_UP_URLS).permitAll()
         //.antMatchers(GET_URLS).permitAll()
         .antMatchers(H2_URL).permitAll()
-        .anyRequest().authenticated();	
+        .anyRequest().authenticated();
+        //.and()
+        //.exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint());;	
 		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 }
