@@ -42,6 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             		response.setStatus(401);
             		//response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"token_expired");
                 }
+            }else {
+            	response.setContentType("application/json");
+        		response.setStatus(401);
             }
 
             if(StringUtils.hasText(jwt) && token){            	
