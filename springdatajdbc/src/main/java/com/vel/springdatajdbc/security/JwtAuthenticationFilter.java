@@ -38,7 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             	token = tokenProvider.validateToken(jwt, request);
             	if(token==false) {
                 	//throw new JwtException(jwt);
-            		throw new ServletException("token_expired");
+            		response.setContentType("application/json");
+            		response.setStatus(401);
+            		//response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"token_expired");
                 }
             }
 
@@ -59,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         	//response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"expired");
         }*/
 		catch (ServletException ex){
-            throw new ServletException("token_expired");
+            //throw new ServletException("token_expired");
         }
 		catch (Exception ex){
 			//response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Login details");

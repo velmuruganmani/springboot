@@ -1,6 +1,8 @@
 package com.vel.springdatajdbc.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 //import javax.servlet.ServletException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
+import com.vel.springdatajdbc.exceptions.InvalidLoginResponse;
 import com.vel.springdatajdbc.service.CustomersService;
 import com.vel.springdatajdbc.service.impl.MapValidationErrorService;
 
@@ -73,24 +76,23 @@ public class CustomersController {
 	
 	@PostMapping("/post/editUser")
 	//@ExceptionHandler(value = { ServletException.class })
-    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, BindingResult result) throws 
+    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, BindingResult result, 
+    		HttpServletResponse response) throws 
     Exception{
-		
+		int status = 0;
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null) return errorMap;
-        /*
-        String message = e.getMessage();
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        if (message!=null && message.equals("token_expired")) {
-        	httpStatus = HttpStatus.UNAUTHORIZED;
-        	message = "the token is expired and not valid anymore";
-        	return new ResponseEntity<>(message, httpStatus);
-        }else {	*/	
-        	GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
+        
+        status = response.getStatus();
+		if(status==401) {
+			 HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+			 InvalidLoginResponse loginResponse = new InvalidLoginResponse();
+			return new ResponseEntity<>(loginResponse, httpStatus);
+		}else {
+			GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
 			return new ResponseEntity<>(user, HttpStatus.OK);
-        //}
-        //return new ResponseEntity<>(user, HttpStatus.OK);
-    }
+			}
+	}
 	
 	@DeleteMapping("/delete/{loginId}")
     public ResponseEntity<?> deleteCustomers(@PathVariable String loginId) throws Exception{

@@ -25,7 +25,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         }else{
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Login details");
         }*/
-		
+				
 		InvalidLoginResponse loginResponse = new InvalidLoginResponse();
 		String jsonLoginResponse = new Gson().toJson(loginResponse);
 		httpServletResponse.setContentType("application/json");
