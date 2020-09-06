@@ -21,10 +21,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {		
 		List<Customers> customersList = new ArrayList<Customers>();
 		customersList= customersRepository.getCustomersById(loginId);
-		Customers customers = customersList.get(0);
-		if(customers==null) new UsernameNotFoundException("User not found");
-		customers.setUsername(customers.getCustomer_login());
-		customers.setPassword("$2a$10$JlyeWI467P8wIZdCQc0NRecK5/aRyT1KJ/UTbl29ZrDlL3v7rCGFu");
+		Customers customers = new Customers();
+		if(customersList.get(0).getCustomer_login()==null) {
+			new UsernameNotFoundException("User not found");
+		}else {
+			customers = customersList.get(0);
+			customers.setUsername(customers.getCustomer_login());
+			customers.setPassword("$2a$10$JlyeWI467P8wIZdCQc0NRecK5/aRyT1KJ/UTbl29ZrDlL3v7rCGFu");
+		}
 		return customers;
 	}
 
