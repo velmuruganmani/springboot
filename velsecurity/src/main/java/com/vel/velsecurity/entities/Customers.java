@@ -76,7 +76,7 @@ public class Customers implements UserDetails{
 		this.customerpassword = customerpassword;
 	}
 
-	
+	@JsonIgnore
 	public String getUsername() {
 		return username;
 	}
@@ -85,6 +85,7 @@ public class Customers implements UserDetails{
 		this.username = username;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

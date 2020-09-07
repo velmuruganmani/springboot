@@ -6,10 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.vel.velsecurity.entities.Customers;
-//import org.springframework.transaction.annotation.Transactional;
-//import com.vel.velsecurity.entities.User;
 import com.vel.velsecurity.repositories.CustomersRepository;
-//import com.vel.velsecurity.repositories.UserRepository;
+//import org.springframework.transaction.annotation.Transactional;
+/*import com.vel.velsecurity.entities.User;
+import com.vel.velsecurity.repositories.UserRepository;*/
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -20,7 +20,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
     private CustomersRepository customersRepository;
 
-	/*@Override
+	/*
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		User user = userRepository.findByUsername(username);
@@ -36,6 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user;
 
     }*/
+	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

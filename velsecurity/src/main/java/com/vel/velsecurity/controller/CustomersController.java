@@ -1,6 +1,7 @@
 package com.vel.velsecurity.controller;
 
 import static com.vel.velsecurity.security.SecurityConstants.TOKEN_PREFIX;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vel.velsecurity.entities.Customers;
 import com.vel.velsecurity.entities.request.LoginRequest;
 import com.vel.velsecurity.entities.response.JWTLoginSucessReponse;
+import com.vel.velsecurity.exceptions.InvalidLoginResponse;
 import com.vel.velsecurity.security.JwtTokenProvider;
 import com.vel.velsecurity.services.CustomersService;
+import com.vel.velsecurity.services.MapValidationErrorService;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -32,6 +35,9 @@ public class CustomersController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    
+    @Autowired
+    private MapValidationErrorService mapValidationErrorService;
     
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result){
@@ -55,6 +61,24 @@ public class CustomersController {
         return  new ResponseEntity<Customers>(newCustomer, HttpStatus.CREATED);
 	
 	}
+	
+	@PostMapping("/update")
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Customers customers, BindingResult result, HttpServletResponse response){
+
+		int status = 0;
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap!=null) return errorMap;
+        status = response.getStatus();
+		if(status==401) {
+			HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+			InvalidLoginResponse loginResponse = new InvalidLoginResponse();
+			return new ResponseEntity<>(loginResponse, httpStatus);
+		}else {
+
+        Customers updateUser = customersService.updateCustomers(customers);
+        return new ResponseEntity<Customers>(updateUser, HttpStatus.CREATED);
+		}
+    }
 
 
 

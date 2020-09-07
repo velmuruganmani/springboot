@@ -1,5 +1,6 @@
 package com.vel.velsecurity.services;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,13 @@ public class CustomersService {
 	  return customersRepository.save(newCustomers);
 	}
 
+	public Customers updateCustomers(@Valid Customers updateCustomers) {
+		Customers findCustomers = customersRepository.findByCustomerloginid(updateCustomers.getCustomerloginid());
+		if(findCustomers!=null) {
+			findCustomers.setCustomername(updateCustomers.getCustomername());
+			customersRepository.save(findCustomers);
+		}
+		return findCustomers;
+	}
 
 }
