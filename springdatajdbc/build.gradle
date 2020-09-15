@@ -4,6 +4,10 @@ plugins {
 	id 'java'
 }
 
+ext {
+    karateVersion = '0.9.6'
+}
+
 group = 'com.vel.springdatajdbc'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '14'
@@ -22,8 +26,23 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	testCompile 'com.intuit.karate:karate-junit5:'+karateVersion
+	testCompile 'com.intuit.karate:karate-apache:'+karateVersion
 }
+
+sourceSets {
+    test {
+        resources {
+            srcDir file('src/test/java')
+            exclude '**/*.java'
+        }
+    }
+}
+
 
 test {
 	useJUnitPlatform()
+	systemProperty "karate.options", System.properties.getProperty("karate.options")
+    systemProperty "karate.env", System.properties.getProperty("karate.env")
+     outputs.upToDateWhen { false }
 }
