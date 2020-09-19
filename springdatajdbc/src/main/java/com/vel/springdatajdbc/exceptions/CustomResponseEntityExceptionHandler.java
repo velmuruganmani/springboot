@@ -1,4 +1,4 @@
-/*package com.vel.springdatajdbc.exceptions;
+package com.vel.springdatajdbc.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
-    public final ResponseEntity<Object> handleProjectIdException(JwtException ex, WebRequest request){
-    	JwtExceptionResponse exceptionResponse = new JwtExceptionResponse(ex.getMessage());
+    public final ResponseEntity<Object> handleProjectIdException(CustomersIdException ex, WebRequest request){
+    	CustomersIdExceptionResponse exceptionResponse = new CustomersIdExceptionResponse(ex.getMessage());
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
     
-}*/
+}

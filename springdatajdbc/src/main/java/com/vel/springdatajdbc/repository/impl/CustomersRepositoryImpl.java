@@ -23,6 +23,7 @@ import com.vel.springdatajdbc.entities.ApplicationsConfig;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
+import com.vel.springdatajdbc.exceptions.CustomersIdException;
 import com.vel.springdatajdbc.repository.CustomersRepository;
 
 
@@ -446,12 +447,16 @@ public class CustomersRepositoryImpl extends JdbcDaoSupport implements Customers
 					return response;
 					
 				}else {	
-					response.setCustomers(customer);
-					response.setErrorMessage("Customer details does not exits");
+					/*response.setCustomers(customer);
+					response.setErrorMessage("Customer details does not exits");*/
+					throw new CustomersIdException(customer.getCustomer_id());
 				}
 			
 			
-		}catch(Exception e) {
+		}catch(CustomersIdException e) {
+			throw new CustomersIdException(customer.getCustomer_id());
+		}
+		catch(Exception e) {
 			response.setErrorMessage(e.toString());
 		}
 		

@@ -7,6 +7,7 @@ import com.vel.springdatajdbc.entities.AddCustomersRequest;
 import com.vel.springdatajdbc.entities.Customers;
 import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
+import com.vel.springdatajdbc.exceptions.CustomersIdException;
 import com.vel.springdatajdbc.repository.CustomersRepository;
 import com.vel.springdatajdbc.service.CustomersService;
 
@@ -36,8 +37,14 @@ public class CustomersServiceImpl implements CustomersService {
 
 	@Override
 	public GetAllCustomersResponse editCustomers(AddCustomersRequest editCustomersRequest) {
+		try {
 		GetAllCustomersResponse user = customersRepository.editCustomers(editCustomersRequest);
 		return user;
+		
+		}catch(CustomersIdException ex) {
+			throw new CustomersIdException("User ID does not exists "+ex);
+		}
+		
 	}
 
 	@Override

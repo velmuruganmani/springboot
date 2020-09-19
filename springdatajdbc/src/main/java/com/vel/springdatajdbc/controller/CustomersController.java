@@ -8,7 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+//import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 //import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +25,7 @@ import com.vel.springdatajdbc.entities.GetAllCustomersRequest;
 import com.vel.springdatajdbc.entities.GetAllCustomersResponse;
 import com.vel.springdatajdbc.exceptions.InvalidLoginResponse;
 import com.vel.springdatajdbc.service.CustomersService;
-import com.vel.springdatajdbc.service.impl.MapValidationErrorService;
+//import com.vel.springdatajdbc.service.impl.MapValidationErrorService;
 
 
 @RestController
@@ -37,8 +37,8 @@ public class CustomersController {
 	@Autowired
 	CustomersService customersService;
 	
-	 @Autowired
-	 private MapValidationErrorService mapValidationErrorService;
+	 /*@Autowired
+	 private MapValidationErrorService mapValidationErrorService;*/
 	 
 	
 	@GetMapping("/home")
@@ -76,12 +76,11 @@ public class CustomersController {
 	
 	@PostMapping("/post/editUser")
 	//@ExceptionHandler(value = { ServletException.class })
-    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, BindingResult result, 
-    		HttpServletResponse response) throws 
-    Exception{
+    public ResponseEntity<?> editCustomers(@Valid @RequestBody AddCustomersRequest editCustomersRequest, 
+    		HttpServletResponse response) throws Exception{
 		int status = 0;
-		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null) return errorMap;
+		/*ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null) return errorMap;*/
         
         status = response.getStatus();
 		if(status==401) {
@@ -91,7 +90,7 @@ public class CustomersController {
 		}else {
 			GetAllCustomersResponse user = customersService.editCustomers(editCustomersRequest);
 			return new ResponseEntity<>(user, HttpStatus.OK);
-			}
+		}
 	}
 	
 	@DeleteMapping("/delete/{loginId}")
