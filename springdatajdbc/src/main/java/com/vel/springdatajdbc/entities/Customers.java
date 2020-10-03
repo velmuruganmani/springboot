@@ -65,6 +65,7 @@ public class Customers implements UserDetails {
 	
 	public String username;
 	public String password;
+	public String role;
 	
 	@JsonGetter("cus_id")
 	public String getCustomer_id() {
@@ -189,6 +190,16 @@ public class Customers implements UserDetails {
 		this.password = password;
 	}
 	
+	@JsonIgnore
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+
+	
 	@Override
 	public String toString() {
 		return "Customers [customer_id=" + customer_id + ", customer_login=" + customer_login + ", customer_first_name="
@@ -196,7 +207,7 @@ public class Customers implements UserDetails {
 				+ customer_telephone + ", customer_email=" + customer_email + ", customer_status=" + customer_status
 				+ ", customer_iso_code=" + customer_iso_code + ", customer_fax=" + customer_fax + ", customer_language="
 				+ customer_language + ", customer_serial_no=" + customer_serial_no + ", applicationsDetails="
-				+ applicationsDetails + ", username=" + username + ", password=" + password + "]";
+				+ applicationsDetails + ", username=" + username + ", password=" + password + ", role=" + role + "]";
 	}
 	
 	/* UserDetails interface methods  - Start */
